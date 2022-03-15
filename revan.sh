@@ -5,18 +5,18 @@ DOMAIN_LIST="$@"
 
 for i in $DOMAIN_LIST
 do
-    # Check if domain is an ip address
+    # Check if input is an ip address
     if [[ $DOMAIN_LIST =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]];
     then
         echo "it's a domain"
         i=$(nslookup $i | grep -E -i -w 'ca|com' | awk '{print $4}' | sort | uniq | rev | cut -d '.' -f -3 | rev)
 
-    # Check if domain is an email
+    # Check if input is an email
     elif [[ $i == *[@]* ]];
     then
         i=$( echo $i | cut -d '@' -f2 )
 
-    # Check if domain is a website
+    # Check if input is a website
     elif [[ $i == *[www]* ]];
     then
         echo "it's a website"
