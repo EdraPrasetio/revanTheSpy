@@ -7,8 +7,8 @@ if [[ $DOMAIN_LIST =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]];
 then
     for i in $DOMAIN_LIST
     do
-        printf "Domain: "
-        dig -x $i +noall +answer | awk '{print $5}'| sed -n '4 p' | cut -d. 
+        echo "--Domain--"
+        dig -x $i +noall +answer | awk '{print $5}'
 
         whoisoutput=$"whois $i"
 
@@ -21,12 +21,10 @@ else
     for i in $DOMAIN_LIST
     do
         # Check if domain is an IP address
-        if [[ $DOMAIN_LIST =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]];
-        then
-            echo " "
+    
 
         # Check if domain is an email
-        elif [[ $i == *[@]* ]];
+        if [[ $i == *[@]* ]];
         then
             i=$( echo $i | cut -d '@' -f2 )
 
@@ -50,19 +48,19 @@ else
         echo " "
 
         echo "--Country--"
-        $whoisoutput | grep 'Registrant Country:'| head -n 1 | sed 's/^.*: //'
+        $whoisoutput | grep 'Registrant Country:'| head -n 1 
         echo " "
 
         echo "--City--"
-        $whoisoutput | grep 'Registrant City:' | head -n 1 | sed 's/^.*: //'
+        $whoisoutput | grep 'Registrant City:' | head -n 1 
         echo " "
 
         echo "--Phone Number--"
-        $whoisoutput | grep 'Registrant Phone' | head -n 1 | awk '{print $3}'
+        $whoisoutput | grep 'Phone' | grep -Ev '(Ext)' | sort | uniq
         echo " "
 
         echo "--email--"
-        $whoisoutput | grep 'Email' |  awk '{print $3}' | sort | uniq
+        $whoisoutput | grep 'Email' | sort | uniq
         echo " "
 
         echo "--Creation Date--"
